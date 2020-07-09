@@ -71,8 +71,7 @@ public class MiniServer : MonoBehaviour {
             while (true)
             {
                 TcpClient socket = serverSocket.AcceptTcpClient();
-                Debug.Log("MiniServer::ServerThread: new client: " + socket.Client.LocalEndPoint.ToString());
-                Thread thread = new Thread(() => ClientThread(socket))
+                Thread thread = new Thread(() => ClientCommand(socket))
                 {
                     IsBackground = true
                 };
@@ -88,25 +87,26 @@ public class MiniServer : MonoBehaviour {
         }
     }
 
-    private void ClientThread(TcpClient socket)
+    private void ClientCommand(TcpClient socket)
     {
-        Debug.Log("MiniServer::ClientThread: new client thread: " + socket.Client.LocalEndPoint.ToString());
+        //Debug.Log("MiniServer::ClientCommand: new client thread: " + socket.Client.LocalEndPoint.ToString());
 
         string cmd = MiniUtility.Read(socket);
         if (cmd == "list")
         {
-            Debug.Log("MiniServer::ClientThread: requesting server list");
+            //Debug.Log("MiniServer::ClientCommand: server list requested");
             mutex.WaitOne();
             string s = MiniUtility.Serialize(serverList);
             mutex.ReleaseMutex();
             if (!MiniUtility.Write(socket, s))
             {
-                Debug.LogError("MiniServer::ClientThread: could not send server list");
+                Debug.LogError("MiniServer::ClientCommand: could not send server list to client: "
+                    + socket.Client.LocalEndPoint.ToString());
             }
         }
         else if (cmd == "register")
         {
-            Debug.Log("MiniServer::ClientThread: requesting client registration");
+            //Debug.Log("MiniServer::ClientCommand: requesting client registration");
             string s = MiniUtility.Read(socket);
             if (!string.IsNullOrEmpty(s))
             {
@@ -117,25 +117,25 @@ public class MiniServer : MonoBehaviour {
                     MiniHostData registredHost = serverList.Find(h => h.ip == hostData.ip && h.port == hostData.port);
                     if (registredHost != null)
                     {
-                        Debug.Log("MiniServer::ClientThread: updating host data: " + hostData.ip);
+                        Debug.Log("MiniServer::ClientCommand: updating host data: " + hostData.ip);
                         serverList[serverList.IndexOf(registredHost)] = hostData;
                     }
                     else
                     {
-                        Debug.Log("MiniServer::ClientThread: registred host: " + hostData.ip);
+                        Debug.Log("MiniServer::ClientCommand: registred host: " + hostData.ip);
                         serverList.Add(hostData);
                     }
                     mutex.ReleaseMutex();
                 }
                 else
                 {
-                    Debug.LogError("MiniServer::ClientThread: could not deserialize host data");
+                    Debug.LogError("MiniServer::ClientCommand: could not deserialize host data");
                 }
             }
         }
         else if (cmd == "unregister")
         {
-            Debug.Log("MiniServer::ClientThread: requesting client deletion");
+            //Debug.Log("MiniServer::ClientCommand: requesting host deletion");
             string s = MiniUtility.Read(socket);
             if (!string.IsNullOrEmpty(s))
             {
@@ -146,18 +146,18 @@ public class MiniServer : MonoBehaviour {
                     MiniHostData registredHost = serverList.Find(h => h.ip == hostData.ip && h.port == hostData.port);
                     if (registredHost != null)
                     {
-                        Debug.Log("MiniServer::ClientThread: deleting client data: " + hostData.ip);
+                        Debug.Log("MiniServer::ClientCommand: removing host: " + hostData.ip);
                         serverList.Remove(registredHost);
                     }
                     else
                     {
-                        Debug.Log("MiniServer::ClientThread: client data not found: " + hostData.ip);
+                        Debug.Log("MiniServer::ClientCommand: could not remove host, host not found: " + hostData.ip);
                     }
                     mutex.ReleaseMutex();
                 }
                 else
                 {
-                    Debug.LogError("MiniServer::ClientThread: could not deserialize host data");
+                    Debug.LogError("MiniServer::ClientCommand: could not deserialize host data");
                 }
             }
         }
@@ -167,7 +167,7 @@ public class MiniServer : MonoBehaviour {
 
     private void OnDestroy()
     {
-        Debug.Log("MiniServer::OnDestroy: exiting... ");
+        Debug.Log("MiniServer::OnDestroy: cleanup... ");
 
         serverSocket.Server.Close();
         serverSocket.Server.Dispose();
