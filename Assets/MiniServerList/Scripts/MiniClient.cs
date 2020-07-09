@@ -19,6 +19,7 @@ public class MiniClient : MonoBehaviour {
 
             testHostData = new MiniHostData
             {
+                version = "1.0",
                 name = "Test Server",
                 comment = "Some usefull data",
                 password = "abcdefgh",
@@ -29,8 +30,7 @@ public class MiniClient : MonoBehaviour {
                 mapTime = 1000,
                 roundTime = 100,
                 playerNow = Random.Range(0, 10),
-                playerMax = 10,
-                version = 1
+                playerMax = 10
             };
         }
     }

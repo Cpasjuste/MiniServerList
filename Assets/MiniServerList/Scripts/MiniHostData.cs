@@ -1,5 +1,6 @@
 ﻿[System.Serializable]
 public class MiniHostData {
+    public string version;
     public string name;
     public string comment;
     public string password;
@@ -11,5 +12,4 @@ public class MiniHostData {
     public int playerMax;
     public int mapTime;
     public int roundTime;
-    public int version;
 }
