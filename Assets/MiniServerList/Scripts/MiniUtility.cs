@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Net;
 using System.Net.Sockets;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Cryptography;
@@ -32,7 +31,8 @@ public class MiniUtility {
 
         try
         {
-            string s = new WebClient().DownloadString("http://ipinfo.iod/json");
+            // 5 secondes timeout
+            string s = new MiniWebClient(5).DownloadString("http://ipinfo.iod/json");
             ipInfo = JsonUtility.FromJson<IpInfo>(s);
             return ipInfo;
         }
@@ -44,7 +44,8 @@ public class MiniUtility {
         try
         {
             Debug.Log("MiniIpInfo::GetIpInfo: trying to get external ip address from icanhazip.com");
-            string s = new WebClient().DownloadString("http://icanhazip.com/");
+            // 5 secondes timeout
+            string s = new MiniWebClient(5).DownloadString("http://icanhazip.com/");
             ipInfo.ip = s;
             return ipInfo;
         }
