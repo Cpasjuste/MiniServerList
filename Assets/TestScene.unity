@@ -150,8 +150,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c9698d0ccbe08345bc089ff4e48739f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  address: 127.0.0.1
-  port: 8052
+  port: 8089
+  testing: 0
+  serverList: []
 --- !u!4 &493858084
 Transform:
   m_ObjectHideFlags: 0
@@ -209,5 +210,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 611f0467659bdb54babb96dbee958a92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  address: 127.0.0.1
-  port: 8052
+  serverAddress: 127.0.0.1
+  serverPort: 8089
+  testing: 1

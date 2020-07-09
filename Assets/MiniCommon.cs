@@ -6,9 +6,8 @@ using System.Security.Cryptography;
 using System.Text;
 using UnityEngine;
 
-public class MiniCommon
-{
-    private static string k = "84B534DA932C4781CDFBDAEB";
+public class MiniCommon {
+    private static string k = "94B534EA831C3672CAFBDAEC";
 
     public static string Read(TcpClient socket)
     {
@@ -56,7 +55,7 @@ public class MiniCommon
         return message;
     }
 
-    public static void Write(TcpClient socket, string data)
+    public static bool Write(TcpClient socket, string data)
     {
         Debug.Log("MiniCommon::Write: address: " + socket.Client.RemoteEndPoint.ToString());
 
@@ -75,88 +74,94 @@ public class MiniCommon
             else
             {
                 Debug.LogError("MiniCommon::Write: can't write to stream");
+                return false;
             }
         }
         catch (SocketException socketException)
         {
             Debug.LogError("MiniCommon::Write: Socket exception: " + socketException);
-        }
-    }
-
-    public static string Encrypt(byte[] toEncrypt)
-    {
-        byte[] keyArray = UTF8Encoding.UTF8.GetBytes(k);
-
-        // 256-AES key
-        byte[] toEncryptArray = toEncrypt;
-
-        RijndaelManaged rDel = new RijndaelManaged();
-        rDel.Key = keyArray;
-        rDel.Mode = CipherMode.ECB;
-        // http://msdn.microsoft.com/en-us/library/system.security.cryptography.ciphermode.aspx
-        rDel.Padding = PaddingMode.PKCS7;
-        // better lang support
-        ICryptoTransform cTransform = rDel.CreateEncryptor();
-        byte[] resultArray = cTransform.TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
-        return System.Convert.ToBase64String(resultArray);
-    }
-
-    public static byte[] Decrypt(string toDecrypt)
-    {
-        byte[] keyArray = UTF8Encoding.UTF8.GetBytes(k);
-
-        // AES-256 key
-        byte[] toEncryptArray = System.Convert.FromBase64String(toDecrypt);
-
-        RijndaelManaged rDel = new RijndaelManaged();
-        rDel.Key = keyArray;
-        rDel.Mode = CipherMode.ECB;
-        // http://msdn.microsoft.com/en-us/library/system.security.cryptography.ciphermode.aspx
-        rDel.Padding = PaddingMode.PKCS7;
-        // better lang support
-        ICryptoTransform cTransform = rDel.CreateDecryptor();
-
-        return cTransform.TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
-    }
-
-    public static string Serialize(object serializableObject)
-    {
-        if (serializableObject == null)
-        {
-            Debug.Log("serialize: serializableObject == null");
-            return null;
+            return false;
         }
 
-        if (!serializableObject.GetType().IsSerializable)
+        return true;
+    }
+
+    public static string Serialize(object o)
+    {
+        if (o == null || !o.GetType().IsSerializable)
         {
-            Debug.Log("serialize: not serializable");
             return null;
         }
 
         MemoryStream memoryStream = new MemoryStream();
-        new BinaryFormatter().Serialize(memoryStream, serializableObject);
+        new BinaryFormatter().Serialize(memoryStream, o);
 
         return Encrypt(memoryStream.ToArray());
     }
 
-    public static object Deserialize(string serializedString)
+    public static object Deserialize(string s)
     {
-        if (serializedString == null
-            || serializedString == string.Empty
-            || serializedString.Equals("null"))
-            return null;
-
         byte[] decrypted = null;
+
+        if (string.IsNullOrEmpty(s))
+        {
+            return null;
+        }
+
         try
         {
-            decrypted = Decrypt(serializedString);
+            decrypted = Decrypt(s);
         }
         catch (Exception e)
         {
-            Debug.Log(e.ToString());
+            Debug.LogError(e.ToString());
+            return null;
         }
 
         MemoryStream memoryStream = new MemoryStream(decrypted);
         return new BinaryFormatter().Deserialize(memoryStream);
+    }
+
+    private static string Encrypt(byte[] toEncrypt)
+    {
+        byte[] keyArray = Encoding.UTF8.GetBytes(k);
+
+        // 256-AES key
+        byte[] toEncryptArray = toEncrypt;
+
+        RijndaelManaged rDel = new RijndaelManaged
+        {
+            Key = keyArray,
+            Mode = CipherMode.ECB,
+            // http://msdn.microsoft.com/en-us/library/system.security.cryptography.ciphermode.aspx
+            Padding = PaddingMode.PKCS7
+        };
+
+        // better lang support
+        ICryptoTransform cTransform = rDel.CreateEncryptor();
+        byte[] resultArray = cTransform.TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
+
+        return Convert.ToBase64String(resultArray);
+    }
+
+    private static byte[] Decrypt(string toDecrypt)
+    {
+        byte[] keyArray = Encoding.UTF8.GetBytes(k);
+
+        // AES-256 key
+        byte[] toEncryptArray = Convert.FromBase64String(toDecrypt);
+
+        RijndaelManaged rDel = new RijndaelManaged
+        {
+            Key = keyArray,
+            Mode = CipherMode.ECB,
+            // http://msdn.microsoft.com/en-us/library/system.security.cryptography.ciphermode.aspx
+            Padding = PaddingMode.PKCS7
+        };
+
+        // better lang support
+        ICryptoTransform cTransform = rDel.CreateDecryptor();
+
+        return cTransform.TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
     }
 }
