@@ -212,4 +212,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   miniServerAddress: 127.0.0.1
   miniServerPort: 8089
-  testing: 1
+  testing: 0
