@@ -28,18 +28,32 @@ public class MiniUtility {
 
     public static IpInfo GetIpInfo()
     {
+        IpInfo ipInfo = new IpInfo();
+
         try
         {
-            string s = new WebClient().DownloadString("http://ipinfo.io/json");
-            IpInfo ipInfo = JsonUtility.FromJson<IpInfo>(s);
+            string s = new WebClient().DownloadString("http://ipinfo.iod/json");
+            ipInfo = JsonUtility.FromJson<IpInfo>(s);
             return ipInfo;
         }
         catch (Exception ex)
         {
-            Debug.LogError("MiniIpInfo::GetIpInfo: " + ex.ToString());
+            Debug.LogWarning("MiniIpInfo::GetIpInfo: failed to get ip information from ipinfo.io: " + ex.ToString());
         }
 
-        return new IpInfo();
+        try
+        {
+            Debug.Log("MiniIpInfo::GetIpInfo: trying to get external ip address from icanhazip.com");
+            string s = new WebClient().DownloadString("http://icanhazip.com/");
+            ipInfo.ip = s;
+            return ipInfo;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError("MiniIpInfo::GetIpInfo: failed to get ip information from icanhazip.com: " + ex.ToString());
+        }
+
+        return ipInfo;
     }
 
     public static string Read(TcpClient socket)
