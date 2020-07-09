@@ -150,8 +150,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c9698d0ccbe08345bc089ff4e48739f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  port: 8089
-  testing: 0
+  listeningPort: 8089
+  hostCheckTimeout: 10
   serverList: []
 --- !u!4 &493858084
 Transform:

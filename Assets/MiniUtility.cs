@@ -6,7 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using UnityEngine;
 
-public class MiniCommon {
+public class MiniUtility {
     private static string k = "94B534EA831C3672CAFBDAEC";
 
     public static string Read(TcpClient socket)
