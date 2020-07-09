@@ -117,7 +117,7 @@ public class MiniServer : MonoBehaviour {
                     MiniHostData registredHost = serverList.Find(h => h.ip == hostData.ip && h.port == hostData.port);
                     if (registredHost != null)
                     {
-                        Debug.Log("MiniServer::ClientThread: updating host data:" + hostData.ip);
+                        Debug.Log("MiniServer::ClientThread: updating host data: " + hostData.ip);
                         serverList[serverList.IndexOf(registredHost)] = hostData;
                     }
                     else
@@ -146,7 +146,7 @@ public class MiniServer : MonoBehaviour {
                     MiniHostData registredHost = serverList.Find(h => h.ip == hostData.ip && h.port == hostData.port);
                     if (registredHost != null)
                     {
-                        Debug.Log("MiniServer::ClientThread: deleting client data:" + hostData.ip);
+                        Debug.Log("MiniServer::ClientThread: deleting client data: " + hostData.ip);
                         serverList.Remove(registredHost);
                     }
                     else

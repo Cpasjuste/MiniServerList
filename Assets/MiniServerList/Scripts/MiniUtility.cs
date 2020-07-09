@@ -32,7 +32,7 @@ public class MiniUtility {
         try
         {
             // 5 secondes timeout
-            string s = new MiniWebClient(5).DownloadString("http://ipinfo.iod/json");
+            string s = new MiniWebClient(5).DownloadString("http://ipinfo.io/json");
             ipInfo = JsonUtility.FromJson<IpInfo>(s);
             return ipInfo;
         }
@@ -59,7 +59,7 @@ public class MiniUtility {
 
     public static string Read(TcpClient socket)
     {
-        Debug.Log("MiniCommon::Read: address: " + socket.Client.RemoteEndPoint.ToString());
+        //Debug.Log("MiniCommon::Read: address: " + socket.Client.RemoteEndPoint.ToString());
 
         string message = string.Empty;
 
@@ -105,7 +105,7 @@ public class MiniUtility {
 
     public static bool Write(TcpClient socket, string data)
     {
-        Debug.Log("MiniCommon::Write: address: " + socket.Client.RemoteEndPoint.ToString());
+        //Debug.Log("MiniCommon::Write: address: " + socket.Client.RemoteEndPoint.ToString());
 
         try
         {

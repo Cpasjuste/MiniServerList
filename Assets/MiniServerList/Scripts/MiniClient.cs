@@ -40,7 +40,7 @@ public class MiniClient : MonoBehaviour {
     {
         if (testing)
         {
-            if (GUI.Button(new Rect(10, 10, 200, 30), "Client: Register"))
+            if (GUI.Button(new Rect(10, 10, 200, 30), "Client: Register/Update"))
             {
                 // update playerNow to simulate a host update on server
                 testHostData.playerNow = Random.Range(0, 10);
@@ -73,7 +73,8 @@ public class MiniClient : MonoBehaviour {
                 Debug.Log("MiniClient: servers found: " + serverList.Count);
                 if (serverList.Count > 0)
                 {
-                    Debug.Log("MiniClient: server #1: " + serverList[0].name);
+                    Debug.Log("MiniClient: server #1: address: " + serverList[0].ip + ", name: "
+                        + serverList[0].name + ", players: " + serverList[0].playerNow);
                 }
             }
         }
