@@ -7,8 +7,6 @@ public class MiniClient : MonoBehaviour {
     public string miniServerAddress = "127.0.0.1";
     public int miniServerPort = 8089;
     public bool testing = false;
-    [SerializeField]
-    public MiniUtility.IpInfo ipInfo;
 
     private MiniHostData testHostData;
 
@@ -17,18 +15,19 @@ public class MiniClient : MonoBehaviour {
         if (testing)
         {
             // get real ip address
-            ipInfo = MiniUtility.GetIpInfo();
+            MiniUtility.IpInfo ipInfo = MiniUtility.GetIpInfo();
 
             testHostData = new MiniHostData
             {
                 name = "Test Server",
+                comment = "Some usefull data",
                 password = "abcdefgh",
                 map = "superMap",
                 country = ipInfo.country,
                 ip = ipInfo.ip,
                 port = 8090,
-                timePerMap = 1000,
-                timePerRound = 100,
+                mapTime = 1000,
+                roundTime = 100,
                 playerNow = Random.Range(0, 10),
                 playerMax = 10,
                 version = 1
