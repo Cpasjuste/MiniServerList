@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Net;
 using System.Net.Sockets;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Cryptography;
@@ -7,7 +8,39 @@ using System.Text;
 using UnityEngine;
 
 public class MiniUtility {
+
     private static string k = "94B534EA831C3672CAFBDAEC";
+
+    [Serializable]
+    public class IpInfo {
+
+        public string ip;
+        public string hostname;
+        public string city;
+        public string region;
+        public string country;
+        public string loc;
+        public string org;
+        public string postal;
+        public string timezone;
+        public string readme;
+    }
+
+    public static IpInfo GetIpInfo()
+    {
+        try
+        {
+            string s = new WebClient().DownloadString("http://ipinfo.io/json");
+            IpInfo ipInfo = JsonUtility.FromJson<IpInfo>(s);
+            return ipInfo;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError("MiniIpInfo::GetIpInfo: " + ex.ToString());
+        }
+
+        return new IpInfo();
+    }
 
     public static string Read(TcpClient socket)
     {

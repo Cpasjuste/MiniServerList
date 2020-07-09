@@ -151,7 +151,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   listeningPort: 8089
-  hostCheckTimeout: 10
+  hostCheckTimeout: 60
   serverList: []
 --- !u!4 &493858084
 Transform:
@@ -210,6 +210,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 611f0467659bdb54babb96dbee958a92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  serverAddress: 127.0.0.1
-  serverPort: 8089
+  miniServerAddress: 127.0.0.1
+  miniServerPort: 8089
   testing: 1
+  ipInfo:
+    ip: 
+    hostname: 
+    city: 
+    region: 
+    country: 
+    loc: 
+    org: 
+    postal: 
+    timezone: 
+    readme: 

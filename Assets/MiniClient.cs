@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class MiniClient : MonoBehaviour {
 
-    public string serverAddress = "127.0.0.1";
-    public int serverPort = 8089;
+    public string miniServerAddress = "127.0.0.1";
+    public int miniServerPort = 8089;
     public bool testing = false;
+    [SerializeField]
+    public MiniUtility.IpInfo ipInfo;
 
     private MiniHostData testHostData;
 
@@ -14,13 +16,16 @@ public class MiniClient : MonoBehaviour {
     {
         if (testing)
         {
+            // get real ip address
+            ipInfo = MiniUtility.GetIpInfo();
+
             testHostData = new MiniHostData
             {
                 name = "Test Server",
                 password = "abcdefgh",
-                country = "FR",
                 map = "superMap",
-                ip = "127.0.0.1",
+                country = ipInfo.country,
+                ip = ipInfo.ip,
                 port = 8090,
                 timePerMap = 1000,
                 timePerRound = 100,
@@ -40,7 +45,7 @@ public class MiniClient : MonoBehaviour {
                 // update playerNow to simulate a host update on server
                 testHostData.playerNow = Random.Range(0, 10);
 
-                if (Register(serverAddress, serverPort, testHostData))
+                if (Register(miniServerAddress, miniServerPort, testHostData))
                 {
                     Debug.Log("MiniClient: registration success");
                 }
@@ -52,7 +57,7 @@ public class MiniClient : MonoBehaviour {
 
             if (GUI.Button(new Rect(10, 50, 200, 30), "Client: UnRegister"))
             {
-                if (UnRegister(serverAddress, serverPort, testHostData))
+                if (UnRegister(miniServerAddress, miniServerPort, testHostData))
                 {
                     Debug.Log("MiniClient: unregistration success");
                 }
@@ -64,7 +69,7 @@ public class MiniClient : MonoBehaviour {
 
             if (GUI.Button(new Rect(10, 90, 200, 30), "Client: GetServerList"))
             {
-                List<MiniHostData> serverList = GetServerList(serverAddress, serverPort);
+                List<MiniHostData> serverList = GetServerList(miniServerAddress, miniServerPort);
                 Debug.Log("MiniClient: servers found: " + serverList.Count);
                 if (serverList.Count > 0)
                 {

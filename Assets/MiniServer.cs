@@ -46,6 +46,7 @@ public class MiniServer : MonoBehaviour {
                 try
                 {
                     tcpClient.Connect(hostData.ip, hostData.port);
+                    //Debug.Log("MiniServer::OnCheckHost: host is up: " + hostData.ip);
                 }
                 catch (System.Exception)
                 {
@@ -81,7 +82,9 @@ public class MiniServer : MonoBehaviour {
         catch (SocketException socketException)
         {
             if (socketException.ErrorCode != 10004) // WSACancelBlockingCall (thread close)
+            {
                 Debug.LogError("MiniServer::ServerThread: SocketException " + socketException.ErrorCode);
+            }
         }
     }
 
