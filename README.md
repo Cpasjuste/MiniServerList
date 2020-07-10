@@ -8,7 +8,7 @@
 ## Installation
 
 - Client: copy the "MiniServerList" folder to your "Assets" folder
-- Server: open the project in Unity, build/export the "MiniServerList" scene then run it on your dedicated server.
+- Server: open the project in Unity, build/export (in headless mode) the "MiniServerList" scene then run it on your dedicated server.
 
 ## Client usage
 
